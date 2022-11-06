@@ -1,0 +1,9 @@
+
+spring:
+  r2dbc:
+    url:  r2dbc:pool:mysql://103.133.215.133:3306/pl_migration
+    username: pl_master
+    password: pl*#@$
+
+server:
+  port : 9051
