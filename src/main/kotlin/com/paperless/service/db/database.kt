@@ -23,34 +23,36 @@ data class GenericTransaction(
 @Table("PERSONAL_TRANSACTION_TYPE")
 data class TransactionType(
     @Id val typeSeq : Long,
-    @Column("expense_type_title") val expenseTypeTitle : String,
-    @Column("txn_level") val transactionLevel : Int,
-    @Column("parent_level") val parentLevel: Int,
-    @Column("icon") val icon : String ?,
+    @Column("expense_type_title") var expenseTypeTitle : String,
+    @Column("txn_level") var transactionLevel : Int,
+    @Column("parent_level") var parentLevel: Int,
+    @Column("icon") var icon : String ?,
     @Column("added_by") val addedBy : Long = 0L
 )
 
 @Table("PERSONAL_GOAL_SUMMARY")
 data class GoalSummary(
     @Id val goalSeq : Long,
-    @Column("goal_title") val goalTitle : String,
-    @Column("goal_desc") val goalDesc : String,
+    @Column("goal_title") var goalTitle : String,
+    @Column("goal_desc") var goalDesc : String,
     @Column("user_id") val userId : Long,
-    @Column("target_amt") val targetAmt : Float,
-    @Column("monthly_installment") val monthlyInstallment : Float,
-    @Column("start_month_year") val startMonthYear : String,
-    @Column("total_month") val totalMonth : Int,
-    @Column("date_added") val dateAdded : Long,
-    @Column("last_payment") val lastPayment : Int
+    @Column("target_amt") var targetAmt : Float,
+    @Column("monthly_installment") var monthlyInstallment : Float,
+    @Column("start_month_year") var startMonthYear : String,
+    @Column("total_month") var totalMonth : Int,
+    @Column("date_added") var dateAdded : Long,
+    @Column("last_payment") val lastPayment : Int,
+    @Column("status") val status :String = "NEW", //new , in-progress, completed
+    @Column("nbr_paid") val nbrOfPaymentReceived : Int = 0
 )
 
 @Table("PERSONAL_BUDGET_SUMMARY")
 data class BudgetSummary(
     @Id val budgetSeq : Long,
     @Column("budget_for") val budgetFor : String, // mm_yyyy
-    @Column("budget_title") val budgetTitle : String,
+    @Column("budget_title") var budgetTitle : String,
     @Column("user_id") val userId : Long,
-    @Column("budget_amount") val budgetAmount : Float,
+    @Column("budget_amount") var budgetAmount : Float,
     @Column("date_added") val dateAdded : Long,
     @Column("txn_type") val transactionType : Long,
     @Column("txn_type_level") val transactionTypeLevel : Int
