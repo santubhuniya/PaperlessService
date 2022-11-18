@@ -17,7 +17,7 @@ class BudgetController(val budgetService : BudgetService) {
     = budgetService.addBudget(newBudgetRequest).first()
 
     @GetMapping("/goals/{userId}",produces = [MediaType.APPLICATION_JSON_VALUE])
-    suspend fun getAllGoals(@PathVariable("userId") userId : Long) : Response<out List<GoalSummaryResponse>>
+    suspend fun getAllGoals(@PathVariable("userId") userId : Long) : Response<out GoalSummaryResponse>
     = budgetService.getListOfGoals(userId).first()
 
     @GetMapping("/budget/all/{userId}/{monthYear}",produces = [MediaType.APPLICATION_JSON_VALUE])

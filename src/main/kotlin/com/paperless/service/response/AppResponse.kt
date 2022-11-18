@@ -46,6 +46,13 @@ data class MonthlySummary(
 )
 
 data class GoalSummaryResponse(
+    val totalGoalAmount : Float,
+    val goalPaid : Float,
+    val goalFor : String,
+    val listGoals : List<GoalSummary?>
+)
+
+data class GoalSummary(
     val goalSeq : Long,
     val goalName : String,
     val goalDesc : String,

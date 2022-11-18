@@ -85,10 +85,10 @@ class BudgetServiceImpl(
         return (nbrPaid / total.toFloat()) * 100
     }
 
-    override suspend fun getListOfGoals(userId: Long) : Flow<Response<out List<GoalSummaryResponse>>>
+    override suspend fun getListOfGoals(userId: Long) : Flow<Response<out GoalSummaryResponse>>
     = execute {
         // get details
-        databaseClient.sql("""
+      val goalList =  databaseClient.sql("""
             select goal_seq, 
             goal_title, 
             goal_desc, 
@@ -103,7 +103,7 @@ class BudgetServiceImpl(
             .bind("user_id",userId)
             .map {
                 row,_->
-                GoalSummaryResponse(
+                GoalSummary(
                     goalSeq = row.get("goal_seq",Long::class.java) ?: 0L,
                     goalName = row.get("goal_title",String::class.java) ?: "",
                     goalDesc = row.get("goal_desc" ,String::class.java) ?: "",
@@ -115,7 +115,45 @@ class BudgetServiceImpl(
                     )
                 )
             }.flow().toList()
+
+        GoalSummaryResponse(
+            totalGoalAmount =getTotalGoalAmount(userId),
+            goalFor = getCurrentDate(),
+            goalPaid = getPaidGaolAmount(userId,getCurrentDate()),
+            listGoals = goalList
+        )
     }
+
+    suspend fun getPaidGaolAmount(userId: Long,monthYear: String) : Float =
+        databaseClient.sql("""
+             select sum(amount) as total_amount from 
+             PERSONAL_UPCOMING_EXPENSE
+             where user_id =:user_id
+             and txn_for =:budget_for
+             and is_paid =:is_paid
+        """.trimIndent())
+            .bind("user_id",userId)
+            .bind("budget_for", getCurrentDate())
+            .bind("is_paid",true)
+            .map {
+                    row,_->
+                row.get("total_amount",Object::class.java)?.toString()?.toFloat() ?: 0.0F
+            }.awaitSingleOrNull() ?: 0.0F
+
+    suspend fun getTotalGoalAmount(userId: Long) : Float =
+        databaseClient.sql("""
+            select sum(amount) as total_amount from 
+             PERSONAL_UPCOMING_EXPENSE
+             where user_id =:user_id
+             and txn_for =:budget_for
+        """.trimIndent())
+            .bind("user_id",userId)
+            .bind("budget_for", getCurrentDate())
+            .map {
+                row,_->
+                row.get("total_amount",Object::class.java)?.toString()?.toFloat() ?: 0.0F
+            }.awaitSingleOrNull() ?: 0.0F
+
 
     override suspend fun getBudgetList(userId: Long, monthYear: String) : Flow<Response<out List<ExpenseBudgetSummary>>>
     = execute{
