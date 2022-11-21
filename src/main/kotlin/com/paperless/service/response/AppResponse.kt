@@ -70,3 +70,42 @@ data class ExpenseBudgetSummary(
     var budgetAmount: Float?,
     val monthYear : String
 )
+
+// monthly expense screen
+data class MonthlyExpenseDetails(
+    val totalExpense: Float,
+    val totalBudget: Float,
+    var listExpenseCategory: List<ExpenseCategory>?,
+    var listTopSpending: List<TopSpending>?
+)
+
+data class ExpenseCategory(
+    val categoryId : Long,
+    var categoryName : String,
+    val amount : Float
+)
+
+data class TopSpending(
+    val expenseId: Long,
+    val expenseName : String,
+    val amount: Float,
+    val icon : String?,
+    val date : Long,
+    val categoryName: String
+)
+
+// statistics page
+data class ChartSummary(
+    val month : Int,
+    val year : Int,
+    val chartType : String, //monthly, weekly, yearly
+    var categoryList : List<ExpenseCategory>?, //pie chart for the chart type,
+    var chartDataList : List<ChartData>?
+)
+
+data class ChartData(
+    val xData : String,
+    val yExpense : Float = 0f,
+    val yIncome : Float = 0f,
+    val yBudget : Float = 0f
+)

@@ -1,9 +1,6 @@
 package com.paperless.service.api
 
-import com.paperless.service.response.NewTransactionRequest
-import com.paperless.service.response.Response
-import com.paperless.service.response.TransactionSummary
-import com.paperless.service.response.TransactionTypeRequest
+import com.paperless.service.response.*
 import com.paperless.service.service.ExpenseService
 import kotlinx.coroutines.flow.first
 import org.springframework.http.MediaType
@@ -38,4 +35,15 @@ class TransactionApiController( val expenseService: ExpenseService) {
         @RequestBody transactionTypeRequest : TransactionTypeRequest
     ) : Response<out Long>
     = expenseService.addExpenseType(transactionTypeRequest).first()
+
+    @GetMapping("/details/{userId}/{monthYear}",produces = [MediaType.APPLICATION_JSON_VALUE])
+    suspend fun getMonthlyTransactionDetails(
+        @PathVariable("userId") userId: Long,
+        @PathVariable("monthYear") monthYear: String
+    ) : Response<out MonthlyExpenseDetails>
+    = expenseService.getMonthlyExpenseDetails(userId,monthYear).first()
+
+    @PostMapping("/statistics")
+    suspend fun getStatistics(@RequestBody chartRequest : ChartRequest) : Response<out ChartSummary>
+    = expenseService.getStatistics(chartRequest).first()
 }

@@ -49,3 +49,11 @@ data class TransactionTypeRequest(
     val icon : String?,
     val addedBy : Long
 )
+
+data class ChartRequest(
+    val month : Int,
+    val year : Int,
+    val chartType : String, //weekly, monthly, yearly
+    val userId: Long,
+    val week : Int
+)
